@@ -1,0 +1,38 @@
+services:
+  frontend:
+    build: ./frontend
+    ports:
+      - "3380:80"
+    volumes:
+      - new-shared-data:/usr/share/nginx/html
+      - ./frontend/nginx.conf:/etc/nginx/nginx.conf
+      - ./frontend/default.conf:/etc/nginx/conf.d/default.conf
+    depends_on:
+      - backend1
+      - backend2
+    networks:
+      - my_network
+
+  backend1:
+    build: ./backend
+    ports:
+      - "5001:5000"
+    volumes:
+      - new-shared-data:/usr/src/app/data
+    networks:
+      - my_network
+
+  backend2:
+    build: ./backend
+    ports:
+      - "5002:5000"
+    volumes:
+      - new-shared-data:/usr/src/app/data
+    networks:
+      - my_network
+
+volumes:
+  new-shared-data:
+
+networks:
+  my_network:
